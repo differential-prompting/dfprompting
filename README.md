@@ -2,7 +2,7 @@
 
 ## Demo
 
-<video src="https://github.com/differential-prompting/differential-prompting.github.io/blob/main/Data/demo.mp4"></video>
+<iframe width="1120" height="630" src="https://www.youtube.com/embed/BKdGuEy--UQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Description
 
@@ -57,7 +57,7 @@ python -m diffPrompt update
 Generate intention, codes and test inputs pool for given code.
 
 ```bash
- python -m diffPrompt --code_path example\bitcount.py --proxy True 
+ python -m diffPrompt --code_path example\example_code.py --proxy True 
  
  ---
  Generate intention
@@ -65,7 +65,7 @@ Generate intention, codes and test inputs pool for given code.
  ....
  ....
  ....
- Done and save the results in :Results/bitcount.py_dbd51d 
+ Done and save the results in :Results/example_code.py_dbd51d 
 ```
 
 Once the command is executed, the results will be saved in the `Results` directory.
