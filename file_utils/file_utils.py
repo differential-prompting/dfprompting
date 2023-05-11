@@ -20,7 +20,7 @@ def clean_codes(path):
     codes = read_file(path)
     x = re.findall("```([\s\S]*?)```", codes)
     try:
-        write_file(os.path.dirname(path),'generated01.py',x[0].replace('python','').replace('```',''))
-        write_file(os.path.dirname(path),'generated02.py',x[1].replace('python','').replace('```',''))
+        write_file(os.path.dirname(path).replace("Codes",""),'generated01.py',x[0].replace('python','').replace('```',''))
+        write_file(os.path.dirname(path).replace("Codes",""),'generated02.py',x[1].replace('python','').replace('```',''))
     except Exception as e:
         print(path + ':( --- crash when clean code')
