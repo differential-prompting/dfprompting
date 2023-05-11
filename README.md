@@ -2,7 +2,7 @@
 
 ## Demo
 
-[video]
+<video src="https://github.com/differential-prompting/differential-prompting.github.io/blob/main/Data/demo.mp4"></video>
 
 ## Description
 
