@@ -6,14 +6,14 @@ import re
 import subprocess
 from openpyxl import Workbook
 
-def run():
+def run(intention_provided):
+
     # Set the proxy port, or you won't be able to connect to the api
-    os.environ["http_proxy"] = "127.0.0.1:7890"  # os.environ["http_proxy"] = "http://<代理ip>:<代理端口>"
-    os.environ["https_proxy"] = "127.0.0.1:7890"  # os.environ["https_proxy"] = "http://<代理ip>:<代理端口>"
+    os.environ["http_proxy"] = "127.0.0.1:7890"  
+    os.environ["https_proxy"] = "127.0.0.1:7890" 
 
     key = input("Please enter the valid key value：")
     url = f'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={key}'
-    # url = f'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=AIzaSyADGj4bZB0nTYerFluByWCeP8cDDRxYrT8'
     headers = {'Content-Type': 'application/json'}
 
     # Create a new workbook
@@ -75,6 +75,46 @@ def run():
         process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         return process.communicate(input_data.encode("utf-8"))[0]
 
+
+    while True:
+        if intention_provided == "True":
+            break
+        else:
+            prompt_1 = "What is the intention of this program?"
+            code = "PUT_code.py"
+            with open(code, encoding='UTF-8') as file:
+                code_content = file.read()
+
+            prompt = prompt_1 + "\n" + code_content
+            # print(prompt)
+
+            data = {
+                "contents": [
+                    {
+                        "parts": [{"text": f"{prompt}"}]
+                    }
+                ]
+            }
+            print("Waiting for Gemini...")
+            response = requests.post(url, headers=headers, json=data)
+            # print(f"response status_code: {response.status_code}")
+            if response.status_code == 500:
+                print(response.status_code)
+                continue
+            else:
+                try:
+                    reply_content = json.loads(json.dumps(response.json(), indent=4, ensure_ascii=False))
+                    ai_reply_intention = reply_content['candidates'][0]['content']['parts'][0]['text']
+                    print("AI:", ai_reply_intention)
+                    intention_file = "intention.txt"
+                    with open(intention_file, "w", encoding='UTF-8') as file:
+                        file.write(ai_reply_intention)
+                    break
+
+                except Exception as e:
+                    print(e)
+                    continue
+
     i = 1
     while i <= 1:
         # print(f"Test {i}：")
@@ -82,11 +122,12 @@ def run():
         # Prepare user input
         j = 1
         while j <= 2:
-            user_input = "Generate a python program based on the following intention.Only generate the program, not generate any explain."
+            user_input_1 = "Generate a python program based on the following intention.Only generate the program, not generate any explain."
             file_path_1 = "intention.txt"
             with open(file_path_1, encoding='utf-8') as file:
                 file_content_1 = file.read()
-            combined_text_1 = user_input + "\n" + file_content_1
+
+            combined_text_1 = user_input_1 + "\n" + file_content_1
 
             data = {
                 "contents": [
@@ -136,11 +177,11 @@ def run():
             print(f"Test inputs generation {test_num}:")
             # generating test inputs
             # Prepare user input
-            user_input = "Please generate diverse test inputs for the following code.Please put Test input: as a separate line in front of each test input,no other explain is needed."
+            user_input_2 = "Please generate diverse test inputs for the following code.Please put Test input: as a separate line in front of each test input,no other explain is needed."
             file_path_2 = "PUT_code.py"
             with open(file_path_2, encoding='utf-8') as file:
                 file_content_2 = file.read()
-            combined_text_2 = user_input + "\n" + file_content_2
+            combined_text_2 = user_input_2 + "\n" + file_content_2
 
             data = {
                 "contents": [
@@ -198,33 +239,25 @@ def run():
                         result_1 = subprocess.run(["python", reference_version_1_file], input=input_data,
                                                   capture_output=True, text=True, timeout=10)
                         if result_1.returncode != 0:
-                            # print("reference_version_1执行出错")
-                            # print("错误信息:", result_1.stderr)
                             continue
                     except subprocess.TimeoutExpired:
-                        # print("reference_version_1执行超时.")
                         continue
                     result_1_output = result_1.stdout
-                    # 打印输出
                     # print("Output_1:")
                     # print(result_1_output)
 
-                    # reference_version_2运行结果
+                    # reference_version_2
                     reference_version_2_file = f"test_{i}/reference_version_2.py"
                     try:
                         # executable code
                         result_2 = subprocess.run(["python", reference_version_2_file], input=input_data,
                                                   capture_output=True, text=True, timeout=10)
                         if result_2.returncode != 0:
-                            # print("reference_version_2执行出错")
-                            # print("错误信息:", result_2.stderr)
                             continue
                     except subprocess.TimeoutExpired:
-                        # print("reference_version_2执行超时.")
                         continue
 
                     result_2_output = result_2.stdout
-                    # 打印输出
                     # print("Output_2:")
                     # print(result_2_output)
 
@@ -239,11 +272,9 @@ def run():
                                                       text=True, timeout=10)
 
                         except subprocess.TimeoutExpired:
-                            # print("PUT执行超时.")
                             continue
 
                         PUT_output = result_3.stdout
-                        # 打印输出
                         # print("Output_code:")
                         # print(PUT_output)
 
@@ -353,7 +384,8 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    intention_provided = input("Do you provide intention?Please enter True or False:")
+    run(intention_provided)
 
 
 
