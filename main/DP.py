@@ -8,12 +8,11 @@ from openpyxl import Workbook
 
 def run():
     # Set the proxy port, or you won't be able to connect to the api
-    os.environ["http_proxy"] = "127.0.0.1:7890"  # os.environ["http_proxy"] = "http://<代理ip>:<代理端口>"
-    os.environ["https_proxy"] = "127.0.0.1:7890"  # os.environ["https_proxy"] = "http://<代理ip>:<代理端口>"
+    os.environ["http_proxy"] = "127.0.0.1:7890"  
+    os.environ["https_proxy"] = "127.0.0.1:7890" 
 
     key = input("Please enter the valid key value：")
     url = f'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={key}'
-    # url = f'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=AIzaSyADGj4bZB0nTYerFluByWCeP8cDDRxYrT8'
     headers = {'Content-Type': 'application/json'}
 
     # Create a new workbook
@@ -198,33 +197,25 @@ def run():
                         result_1 = subprocess.run(["python", reference_version_1_file], input=input_data,
                                                   capture_output=True, text=True, timeout=10)
                         if result_1.returncode != 0:
-                            # print("reference_version_1执行出错")
-                            # print("错误信息:", result_1.stderr)
                             continue
                     except subprocess.TimeoutExpired:
-                        # print("reference_version_1执行超时.")
                         continue
                     result_1_output = result_1.stdout
-                    # 打印输出
                     # print("Output_1:")
                     # print(result_1_output)
 
-                    # reference_version_2运行结果
+                    # reference_version_2
                     reference_version_2_file = f"test_{i}/reference_version_2.py"
                     try:
                         # executable code
                         result_2 = subprocess.run(["python", reference_version_2_file], input=input_data,
                                                   capture_output=True, text=True, timeout=10)
                         if result_2.returncode != 0:
-                            # print("reference_version_2执行出错")
-                            # print("错误信息:", result_2.stderr)
                             continue
                     except subprocess.TimeoutExpired:
-                        # print("reference_version_2执行超时.")
                         continue
 
                     result_2_output = result_2.stdout
-                    # 打印输出
                     # print("Output_2:")
                     # print(result_2_output)
 
@@ -239,11 +230,9 @@ def run():
                                                       text=True, timeout=10)
 
                         except subprocess.TimeoutExpired:
-                            # print("PUT执行超时.")
                             continue
 
                         PUT_output = result_3.stdout
-                        # 打印输出
                         # print("Output_code:")
                         # print(PUT_output)
 
