@@ -384,7 +384,7 @@ def run(intention_provided):
 
 
 if __name__ == '__main__':
-    intention_provided = input("Do you provide intention?Please enter True or False:")
+    intention_provided = input("Do you provide intention? Please enter True or False:")
     run(intention_provided)
 
 
